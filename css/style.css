@@ -119,6 +119,54 @@ header {
     font-size: 1rem;
 }
 
+.search-section {
+    margin-bottom: 16px;
+}
+
+.route-search {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    transition: border-color 0.2s;
+}
+
+.route-search:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
+}
+
+.route-search::placeholder {
+    color: #999;
+}
+
+.route-selection {
+    margin-bottom: 16px;
+}
+
+.route-select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    background-color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.route-select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
+}
+
+.route-select:hover {
+    border-color: var(--primary-color);
+}
+
 @media (max-width: 480px) {
     .container {
         padding: 8px;

@@ -8,31 +8,19 @@
 </head>
 <body>
     <div class="container">
-        <header>
-            <div class="current-time">
-                <span id="current-date"></span>
-                <span id="current-time"></span>
-            </div>
-            <button class="refresh-button" id="refresh-button">更新</button>
-        </header>
-
+        <h1>路線時刻表</h1>
+        
         <div class="route-selection">
-            <select id="route-select" class="route-select">
+            <select id="route-select">
                 <option value="">路線を選択してください</option>
             </select>
         </div>
 
-        <div class="schedule-type">
-            <button class="schedule-type-btn active" data-type="weekday">平日</button>
-            <button class="schedule-type-btn" data-type="saturday">土曜</button>
-            <button class="schedule-type-btn" data-type="holiday">日祝</button>
-        </div>
-
-        <div id="routes-container">
-            <!-- 路線情報がJSで動的に挿入されます -->
+        <div id="schedule-display" class="schedule-display">
+            路線を選択してください
         </div>
     </div>
-    <script src="js/data.js" type="module"></script>
-    <script src="js/main.js" type="module"></script>
+
+    <script type="module" src="js/main.js"></script>
 </body>
 </html>

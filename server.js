@@ -14,8 +14,11 @@ app.get('/api/routes', async (req, res) => {
     const result = await db.query('SELECT * FROM routes ORDER BY name');
     res.json(result.rows);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: '内部サーバーエラー' });
+    console.error('Error fetching routes:', err);
+    res.status(500).json({ 
+      error: '内部サーバーエラー',
+      details: process.env.NODE_ENV === 'development' ? err.message : undefined
+    });
   }
 });
 
@@ -46,8 +49,11 @@ app.get('/api/schedules/:routeId', async (req, res) => {
     
     res.json(schedules);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: '内部サーバーエラー' });
+    console.error('Error fetching schedules:', err);
+    res.status(500).json({ 
+      error: '内部サーバーエラー',
+      details: process.env.NODE_ENV === 'development' ? err.message : undefined
+    });
   }
 });
 
@@ -57,10 +63,16 @@ app.get('/api/holidays', async (req, res) => {
     const result = await db.query('SELECT date FROM holidays ORDER BY date');
     res.json(result.rows.map(row => row.date));
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: '内部サーバーエラー' });
+    console.error('Error fetching holidays:', err);
+    res.status(500).json({ 
+      error: '内部サーバーエラー',
+      details: process.env.NODE_ENV === 'development' ? err.message : undefined
+    });
   }
 });
+
+// 開発環境の場合はエラーの詳細を表示
+process.env.NODE_ENV = 'development';
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

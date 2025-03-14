@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>バス時刻表</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="current-time">
+                <span id="current-date"></span>
+                <span id="current-time"></span>
+            </div>
+            <button id="refresh-btn" class="refresh-button">
+                更新
+            </button>
+        </header>
+
+        <div class="schedule-type">
+            <button class="schedule-type-btn active" data-type="weekday">平日</button>
+            <button class="schedule-type-btn" data-type="saturday">土曜</button>
+            <button class="schedule-type-btn" data-type="holiday">日祝</button>
+        </div>
+
+        <main id="routes-container">
+            <!-- 路線情報がJSで動的に挿入されます -->
+        </main>
+    </div>
+
+    <script src="js/data.js" type="module"></script>
+    <script src="js/main.js" type="module"></script>
+</body>
+</html>

@@ -215,6 +215,40 @@ header {
     border-color: var(--primary-color);
 }
 
+.schedule-pager {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: var(--card-background);
+    border-radius: var(--border-radius);
+}
+
+.pager-button {
+    padding: 8px 16px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.pager-button:hover:not(:disabled) {
+    background-color: #1976D2;
+}
+
+.pager-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+#page-info {
+    font-size: 14px;
+    color: var(--text-color);
+}
+
 @media (max-width: 600px) {
     body {
         padding: 10px;

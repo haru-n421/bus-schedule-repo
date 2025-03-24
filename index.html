@@ -4,29 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>路線時刻表</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>路線時刻表</h1>
-        
-        <div class="route-selection">
-            <select id="route-select">
-                <option value="">路線を選択してください</option>
-            </select>
-        </div>
-
-        <div id="schedule-display" class="schedule-display">
-            路線を選択してください
-        </div>
-
-        <div class="schedule-pager">
-            <button id="prev-times" class="pager-button" disabled>&lt; 前の時刻</button>
-            <span id="page-info"></span>
-            <button id="next-times" class="pager-button" disabled>次の時刻 &gt;</button>
-        </div>
-    </div>
-
-    <script type="module" src="js/main.js"></script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
 </body>
 </html>

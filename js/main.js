@@ -3,6 +3,9 @@ import { formatDate } from './utils.js';
 let filteredRoutes = [];
 let selectedRouteId = null;
 let holidays = [];
+let currentPage = 0;
+let allDepartures = [];
+const ITEMS_PER_PAGE = 3;
 
 // 路線データの取得
 async function fetchRoutes() {
@@ -60,8 +63,8 @@ function updateRouteSelect() {
   });
 }
 
-// 次の出発時刻を探す
-function findNextDepartures(schedules, now) {
+// 全出発時刻を取得
+function getAllDepartures(schedules, now) {
   const currentHour = now.getHours();
   const currentMinute = now.getMinutes();
   
@@ -73,26 +76,26 @@ function findNextDepartures(schedules, now) {
   }
   
   const daySchedule = schedules[scheduleType] || [];
-  let nextDepartures = [];
+  let departures = [];
   
   for (const schedule of daySchedule) {
-    if (schedule.hour < currentHour) continue;
-    
     for (const minute of schedule.minutes) {
-      if (schedule.hour === currentHour && minute <= currentMinute) continue;
+      if (schedule.hour < currentHour || 
+          (schedule.hour === currentHour && minute <= currentMinute)) {
+        continue;
+      }
       
-      nextDepartures.push({
+      departures.push({
         hour: schedule.hour,
         minute: minute
       });
-      
-      if (nextDepartures.length >= 3) break;
     }
-    
-    if (nextDepartures.length >= 3) break;
   }
   
-  return nextDepartures;
+  return departures.sort((a, b) => {
+    if (a.hour !== b.hour) return a.hour - b.hour;
+    return a.minute - b.minute;
+  });
 }
 
 // 祝日かどうかを判定
@@ -101,40 +104,83 @@ function isHoliday(date) {
   return holidays.includes(formattedDate);
 }
 
+// ページャーの更新
+function updatePager() {
+  const prevButton = document.getElementById('prev-times');
+  const nextButton = document.getElementById('next-times');
+  const pageInfo = document.getElementById('page-info');
+  
+  prevButton.disabled = currentPage === 0;
+  nextButton.disabled = (currentPage + 1) * ITEMS_PER_PAGE >= allDepartures.length;
+  
+  if (allDepartures.length > 0) {
+    const start = currentPage * ITEMS_PER_PAGE + 1;
+    const end = Math.min((currentPage + 1) * ITEMS_PER_PAGE, allDepartures.length);
+    const total = allDepartures.length;
+    pageInfo.textContent = `${start}-${end} / ${total}件`;
+  } else {
+    pageInfo.textContent = '';
+  }
+}
+
 // 表示の更新
 async function updateDisplay() {
   const scheduleDisplay = document.getElementById('schedule-display');
   
   if (!selectedRouteId) {
     scheduleDisplay.textContent = '路線を選択してください';
+    allDepartures = [];
+    updatePager();
     return;
   }
   
   const schedules = await fetchSchedule(selectedRouteId);
   if (!schedules) {
     scheduleDisplay.textContent = '時刻表データの取得に失敗しました';
+    allDepartures = [];
+    updatePager();
     return;
   }
   
   const now = new Date();
-  const nextDepartures = findNextDepartures(schedules, now);
+  allDepartures = getAllDepartures(schedules, now);
   
-  if (nextDepartures.length === 0) {
+  if (allDepartures.length === 0) {
     scheduleDisplay.textContent = '本日の運行は終了しました';
+    updatePager();
     return;
   }
   
-  const departureList = nextDepartures.map(dep => 
+  const start = currentPage * ITEMS_PER_PAGE;
+  const pageDepartures = allDepartures.slice(start, start + ITEMS_PER_PAGE);
+  
+  const departureList = pageDepartures.map(dep => 
     `${dep.hour}時${dep.minute}分`
   ).join('、');
   
   scheduleDisplay.textContent = `次の出発時刻: ${departureList}`;
+  updatePager();
 }
 
 // イベントリスナーの設定
 document.getElementById('route-select').addEventListener('change', (e) => {
   selectedRouteId = e.target.value;
+  currentPage = 0;
   updateDisplay();
+});
+
+document.getElementById('prev-times').addEventListener('click', () => {
+  if (currentPage > 0) {
+    currentPage--;
+    updateDisplay();
+  }
+});
+
+document.getElementById('next-times').addEventListener('click', () => {
+  if ((currentPage + 1) * ITEMS_PER_PAGE < allDepartures.length) {
+    currentPage++;
+    updateDisplay();
+  }
 });
 
 // 1分ごとに表示を更新
